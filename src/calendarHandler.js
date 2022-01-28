@@ -9,7 +9,6 @@ async function fetchSource(url) {
 
 async function handleSource(url) {
     const data = await fetchSource(url);
-    //console.log(ical2json.convert(data).VCALENDAR[0].VEVENT[0]);
     const events = ical2json.convert(data).VCALENDAR[0].VEVENT;
     return events;
 }
@@ -26,7 +25,6 @@ function writeCalendar(path, events) {
             }
         ]
     };
-    console.log(calendar.VCALENDAR[0].VEVENT[0]);
     const data = ical2json.revert(calendar);
     fs.writeFileSync(path, data);
 }
