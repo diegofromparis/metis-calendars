@@ -25,4 +25,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Launch script
-        run: node src/index.js
+        run: |
+          node src/index.js
+          git commit -m"Calendar refresh."
+          git push
