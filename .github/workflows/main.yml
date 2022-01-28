@@ -16,5 +16,5 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Refresh calendars
-        run: ls;node src/index.js
+      - run: npm install
+      - run: node src/index.js
