@@ -1,0 +1,8 @@
+dossier1:
+  calendrier1:
+    - http://localhost:8000/test1.ical
+    - http://localhost:8000/test2.ical
+  calendrier2:
+    - http://localhost:8000/test1.ical
+calendrier3: 
+  - http://localhost:8000/test2.ical
