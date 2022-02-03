@@ -21,6 +21,7 @@ function writeCalendar(path, events) {
                 PRODID: '-//ADE/version 6.0',
                 VERSION: '2.0',
                 CALSCALE: 'GREGORIAN',
+                NAME: path.substring(0, path.length - 5),
                 VEVENT: events
             }
         ]
