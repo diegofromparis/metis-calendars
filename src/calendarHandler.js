@@ -14,6 +14,7 @@ async function handleSource(url) {
 }
 
 function writeCalendar(path, events) {
+    console.log(path + " : " + events.length);
     const calendar = {
         VCALENDAR: [
             {
@@ -30,15 +31,23 @@ function writeCalendar(path, events) {
     fs.writeFileSync(path, data);
 }
 
-function handleData(data) {
-    data.forEach(async element => {
+async function handleData(data) {
+    let allEvents = [];
+    const fetchedSources = [];
+    for(let i = 0; i < data.length; i++) {
+        const element = data[i];
         let events = [];
         for(let i = 0; i < element.sources.length; i++) {
             const data = await handleSource(element.sources[i]);
+            if(!fetchedSources.includes(element.sources[i])) {
+                fetchedSources.push(element.sources[i]);
+                allEvents = allEvents.concat(data);
+            }
             events = events.concat(data);
         }
         writeCalendar(element.file, events);
-    });
+    }
+    writeCalendar("all.ical", allEvents);
 }
 
 module.exports.handleData = handleData;
