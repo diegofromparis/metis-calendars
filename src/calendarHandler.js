@@ -14,7 +14,6 @@ async function handleSource(url) {
 }
 
 function writeCalendar(path, events) {
-    console.log(path + " : " + events.length);
     const calendar = {
         VCALENDAR: [
             {
