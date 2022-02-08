@@ -2,6 +2,8 @@
 Metis Calendars est un projet open source sous licence GNU General Public License v3.0 développé par Zinedine GALOUZ pour Sciences Po.
 Celui-ci permet de récupérer et d'agréger des emplois du temps à partir de sources multiples.
 
+Les calendriers générés sont disponibles à l'adresse suivante : https://medialab.github.io/metis-calendars/
+
 # Utilisation
 Pour choisir les emplois du temps à générer et les sources depuis lesquelles récupérer les calendriers, il faut éditer le fichier **liste.yaml**. Il est possible de hiérarchiser les emplois du temps en sous-dossiers, voir exemple ci-dessous :
 ```yaml
