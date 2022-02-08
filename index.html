@@ -19,7 +19,7 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" rel="stylesheet">
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
 
-        <title>Hello, world!</title>
+        <title>Metis Calendars</title>
 
     </head>
 
@@ -30,7 +30,7 @@
                 <h6 class="pt-3 pl-3">Calendriers</h6>
                 <hr/>
                 <ul class="treeview-colorful-list" id="root-list">
-    
+                    <li class='treeview-colorful-items'><a href='https://medialab.github.io/metis-calendars/all.ical'>Global</a></li>
                 </ul>
             </div>
         </div>
@@ -61,7 +61,7 @@
                     newNode = $("<ul class='nested'></ul>");
                     const aNode = $("<a class='treeview-colorful-items-header'><i class='fas fa-plus-circle'></i>" + name + "</a>");
                     const liNode = $("<li class='treeview-colorful-items'></li>");
-                    $(node).append(liNode);
+                    $(node).prepend(liNode);
                     $(liNode).append(aNode);
                     $(liNode).append(newNode);
                 }
