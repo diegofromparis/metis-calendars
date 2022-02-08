@@ -27,3 +27,6 @@ La lecture du fichier de configuration liste.yaml se fait grâce au fichier yaml
 
 ## Traitement de calendriers
 Le traitement de calendriers est géré par le fichier calendarHandler.js. Celui-ci récupère la structure JSON générée par yamlReader et effectue des requêtes HTTP vers les sources demandées. Les fichiers ical résultants sont générés par agrégation des sources et un fichier all.ical agrégeant toutes les sources est également généré.
+
+## Mise à jour automatisée
+La mise à jour des calendriers est gérée par une Github Action définie dans **main.yml**. Celle-ci lance le script une fois toutes les heures et commit le résultat s'il a changé. Il est également possible de lancer l'action manuellement si besoin.
