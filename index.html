@@ -38,14 +38,17 @@
     </body>
 
     <script>
-        $.ajax({
-            url: "https://medialab.github.io/metis-calendars/liste.yaml",
-            success: function(result) {
-                const data = jsyaml.load(result);
-                handleDataElement("", data, "https://medialab.github.io/metis-calendars", $("#root-list"));
-                $('.treeview-colorful').mdbTreeview();
-            }
+        $(() => {
+            $.ajax({
+                url: "https://medialab.github.io/metis-calendars/liste.yaml",
+                success: function(result) {
+                    const data = jsyaml.load(result);
+                    handleDataElement("", data, "https://medialab.github.io/metis-calendars", $("#root-list"));
+                    $('.treeview-colorful').mdbTreeview();
+                }
+            });
         });
+        
 
         function handleDataElement(name, data, prefix, node) {
             let path = prefix;
