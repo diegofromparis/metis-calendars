@@ -19,6 +19,13 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" rel="stylesheet">
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
 
+        
+        <script src='https://github.com/mozilla-comm/ical.js/releases/download/v1.4.0/ical.js'></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" integrity="sha256-16PDMvytZTH9heHu9KBPjzrFTaoner60bnABykjNiM0=" crossorigin="anonymous"/>
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js" integrity="sha256-XOMgUu4lWKSn8CFoJoBoGd9Q/OET+xrfGYSo+AKpFhE=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales-all.min.js" integrity="sha256-GcByKJnun2NoPMzoBsuCb4O2MKiqJZLlHTw3PJeqSkI=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/icalendar@5.10.1/main.global.min.js" integrity="sha256-Cw5va3Z2DC0Os2wMB5sXOPHNDiJ7YzP9WpYy5/WV1aA=" crossorigin="anonymous"></script>
+
         <title>Metis Calendars</title>
 
     </head>
@@ -30,8 +37,12 @@
                 <h6 class="pt-3 pl-3">Calendriers</h6>
                 <hr/>
                 <ul class="treeview-colorful-list" id="root-list">
-                    <li class='treeview-colorful-items'><a href='https://medialab.github.io/metis-calendars/all.ical'>Global</a></li>
+                    <li class='treeview-colorful-items'><a onclick="loadCalendar('https://medialab.github.io/metis-calendars/all.ical', 'Global')">Global</a> - <a href='https://medialab.github.io/metis-calendars/all.ical'><i class='fas fa-download'></i></a></li>
                 </ul>
+            </div>
+            <h1 id="title"></h1>
+            <div id="calendar">
+
             </div>
         </div>
 
@@ -47,7 +58,42 @@
                     $('.treeview-colorful').mdbTreeview();
                 }
             });
+            initCalendar();
+
         });
+
+        function initCalendar() {
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                locale: "fr"
+            });
+            calendar.render();
+        }
+
+        function loadCalendar(url, name) {
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                locale: "fr",
+                events: {
+                    url: url,
+                    format: 'ics'
+                }
+            });
+            calendar.render();
+            $("#title").text(name);
+        }
         
 
         function handleDataElement(name, data, prefix, node) {
@@ -56,7 +102,7 @@
                 path += "/" + name;
             }
             if(Array.isArray(data)) {
-                $(node).append("<li class='treeview-colorful-items'><a href='" + path + ".ical'>" + name + "</a></li>");
+                $(node).append("<li class='treeview-colorful-items'><a onclick='loadCalendar(\"" + path + ".ical\", \"" + name + "\")'>" + name + "</a> - <a href='" + path + ".ical'><i class='fas fa-download'></i></a></li>");
             }
             else {
                 let newNode = node;
