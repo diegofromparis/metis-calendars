@@ -1,13 +1,13 @@
 {
-  "name": "sciencespo",
+  "name": "metis-calendars",
   "version": "1.0.0",
-  "description": "",
+  "description": "Récupère et agrège des emplois du temps à partir de sources multiples.",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Zinedine GALOUZ",
+  "license": "GPL-3.0",
   "dependencies": {
     "axios": "^0.25.0",
     "ical2json": "^3.0.0",
