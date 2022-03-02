@@ -10,7 +10,11 @@ async function fetchSource(url) {
 async function handleSource(url) {
     const data = await fetchSource(url);
     const events = ical2json.convert(data).VCALENDAR[0].VEVENT;
-    return events;
+    return events.map(function(e){
+      e.DESCRIPTION = e.DESCRIPTION.replace(/\\n\(Exporté le:.*$/, '')
+      e["LAST-MODIFIED"] = ""
+      return e;
+    });
 }
 
 function writeCalendar(path, events) {
