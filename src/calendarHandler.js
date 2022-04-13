@@ -40,6 +40,7 @@ async function handleData(data) {
     for(let i = 0; i < data.length; i++) {
         const element = data[i];
         let events = [];
+// TODO : if element.sources.length == 1 && element.sources[0].not startswith (http) => not write calendar and only read it to feed into all
         for(let i = 0; i < element.sources.length; i++) {
             const data = await handleSource(element.sources[i]);
             if(!fetchedSources.includes(element.sources[i])) {

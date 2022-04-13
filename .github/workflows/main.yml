@@ -23,18 +23,42 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Clone repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '16'
-      - uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9.5"
+
       - name: Install dependencies
-        run: npm install
-      - name: Launch script
+        run: |
+          npm install
+          python -m pip install -U pip setuptools
+          python -m pip install -r requirements.txt
+
+      - name: Download and convert URCA's XML calendar
+        run: |
+          python src/ipgp2ical.py "https://educatix.ipgp.fr/calendrier/2021-2022_bpsgnrg_BK/g34989.xml" > L1/IPGP.ical
+          python src/ipgp2ical.py "https://educatix.ipgp.fr/calendrier/2021-2022_bpsgnrg_BK/g38350.xml" > L2/IPGP.ical
+
+      - name: Download and agregate all iCals
         run: |
           node src/index.js
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add .
-          git commit -m "Calendar refresh." || echo "No changes to commit"
-          git push
+
+      - name: Commit & Push calendars
+        run: |
+          if git diff L1 L2 | grep . > /dev/null ; then
+            git config --local user.name github-actions
+            git config --local user.email "github-actions@github.com"
+            git add L1 L2
+            git commit -m "Calendar refresh" || echo "No changes to commit"
+            git push
+          fi
