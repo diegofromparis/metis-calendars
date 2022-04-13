@@ -1,14 +1,36 @@
 import sys
+import ssl
 from uuid import uuid4
 from xml.etree import ElementTree as ET
 from datetime import datetime, time
 from icalendar import Calendar, Event
+from requests import Session
+from requests.adapters import HTTPAdapter
 
 DEFAULT_YEAR = 2021
 START_WEEK = 34
 WEEKS_IN_YEAR = 52
 
-def parse(filename):
+
+class SSLContextAdapter(HTTPAdapter):
+    def init_poolmanager(self, *args, **kwargs):
+        context = ssl.create_default_context()
+        context.set_ciphers("DEFAULT@SECLEVEL=1")
+        kwargs['ssl_context'] = context
+        return super(SSLContextAdapter, self).init_poolmanager(*args, **kwargs)
+
+
+def getUrlBypassSSL(url):
+    s = Session()
+    s.mount('https://', SSLContextAdapter())
+    return s.get(url)
+
+
+def parse_string(string):
+    return ET.fromstring(string)
+
+
+def parse_file(filename):
     return ET.parse(filename)
 
 
@@ -26,7 +48,7 @@ def parse_week_number(event, start_week=START_WEEK):
     Return the result modulo 52 and notify the caller if the year must
     be bumped by one.
 
-    Example: week 60 is week 8 of next year 
+    Example: week 60 is week 8 of next year
     """
     year_offset = 0
     spec = event.find('rawweeks').text
@@ -35,7 +57,7 @@ def parse_week_number(event, start_week=START_WEEK):
         wnum -= WEEKS_IN_YEAR
         year_offset = 1
     return wnum, year_offset
-    
+
 
 def parse_day_number(event):
     return int(event.find('day').text)
@@ -102,7 +124,11 @@ def ipgp_to_ical(tree):
 
 
 if __name__ == "__main__":
-    filename = sys.argv[1]
-    tree = parse(filename)
+    url = "https://educatix.ipgp.fr/calendrier/2021-2022_bpsgnrg_BK/g14727.xml"
+    if len(sys.argv) > 1:
+        url = sys.argv[1]
+
+    xml_string = getUrlBypassSSL(url).text
+    tree = parse_string(xml_string)
     calendar = ipgp_to_ical(tree)
     sys.stdout.buffer.write(calendar.to_ical())
