@@ -7,11 +7,10 @@ async function fetchSource(url) {
     return res.data;
 }
 
-async function handleSource(url) {
-    const data = await fetchSource(url);
-    const events = ical2json.convert(data).VCALENDAR[0].VEVENT;
+function processICal(ical) {
+    const events = ical2json.convert(ical).VCALENDAR[0].VEVENT;
     return events.map(function(e){
-      e.DESCRIPTION = e.DESCRIPTION.replace(/\\n\(Exporté le:.*$/, '')
+      e.DESCRIPTION = (e.DESCRIPTION || "").replace(/\\n\(Exporté le:.*$/, '')
       e["LAST-MODIFIED"] = ""
       return e;
     });
@@ -40,16 +39,25 @@ async function handleData(data) {
     for(let i = 0; i < data.length; i++) {
         const element = data[i];
         let events = [];
-// TODO : if element.sources.length == 1 && element.sources[0].not startswith (http) => not write calendar and only read it to feed into all
-        for(let i = 0; i < element.sources.length; i++) {
-            const data = await handleSource(element.sources[i]);
-            if(!fetchedSources.includes(element.sources[i])) {
-                fetchedSources.push(element.sources[i]);
+        if (element.sources.length == 1 && element.sources[0] === element.file) {
+            const ical = fs.readFileSync(element.file).toString();
+            const data = processICal(ical);
+            if(!fetchedSources.includes(element.file)) {
+                fetchedSources.push(element.file);
                 allEvents = allEvents.concat(data);
             }
-            events = events.concat(data);
+        } else {
+            for(let i = 0; i < element.sources.length; i++) {
+                const ical = await fetchSource(element.sources[i]);
+                const data = processICal(ical);
+                events = events.concat(data);
+                if(!fetchedSources.includes(element.sources[i])) {
+                    fetchedSources.push(element.sources[i]);
+                    allEvents = allEvents.concat(data);
+                }
+            }
+            writeCalendar(element.file, events);
         }
-        writeCalendar(element.file, events);
     }
     writeCalendar("all.ical", allEvents);
 }

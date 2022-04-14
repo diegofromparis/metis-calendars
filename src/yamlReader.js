@@ -9,7 +9,9 @@ function createFolderIfNeeded(folderName) {
 }
 
 function createFile(fileName) {
-    fs.closeSync(fs.openSync(fileName, "w"));
+    if (!fs.existsSync(fileName)) {
+        fs.closeSync(fs.openSync(fileName, "w"));
+    }
 }
 
 function handleDataElement(data, prefix) {
