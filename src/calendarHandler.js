@@ -12,7 +12,7 @@ function processICal(ical) {
     return events.map(function(e){
       e.DESCRIPTION = (e.DESCRIPTION || "")
         .replace(/\\n\(Exporté le:.*$/, '')
-        .replace(/\s*(via RSS le:.*$/, '')
+        .replace(/\s*\(via RSS le:.*$/, '')
       e["LAST-MODIFIED"] = ""
       return e;
     });
