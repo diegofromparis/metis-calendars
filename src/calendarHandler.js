@@ -10,7 +10,9 @@ async function fetchSource(url) {
 function processICal(ical) {
     const events = ical2json.convert(ical).VCALENDAR[0].VEVENT;
     return events.map(function(e){
-      e.DESCRIPTION = (e.DESCRIPTION || "").replace(/\\n\(Exporté le:.*$/, '')
+      e.DESCRIPTION = (e.DESCRIPTION || "")
+        .replace(/\\n\(Exporté le:.*$/, '')
+        .replace(/\s*(via RSS le:.*$/, '')
       e["LAST-MODIFIED"] = ""
       return e;
     });
